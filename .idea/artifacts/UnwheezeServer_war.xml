@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="UnwheezeServer:war">
+    <output-path>$PROJECT_DIR$/target</output-path>
+    <root id="archive" name="Unwheeze.war">
+      <element id="artifact" artifact-name="UnwheezeServer:war exploded" />
+    </root>
+  </artifact>
+</component>
