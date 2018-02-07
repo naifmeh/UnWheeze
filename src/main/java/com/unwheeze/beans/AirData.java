@@ -1,5 +1,7 @@
 package com.unwheeze.beans;
 
+import java.lang.reflect.Field;
+
 public class AirData {
 
     private String location;
@@ -77,4 +79,8 @@ public class AirData {
     public void setUserID(String userID) {
         this.userID = userID;
     }
+
+
+
+
 }
