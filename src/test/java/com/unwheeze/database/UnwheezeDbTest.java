@@ -38,7 +38,6 @@ public class UnwheezeDbTest extends TestCase {
             e.printStackTrace();
             fail();
         }
-        System.out.println(json);
         String expected = "{" +
                 "\"datetime\":  \"1518017373390\" ," +
                 "\"id\":  \"debac791-5b86-4151-a2f9-b32974974f62\" ," +
@@ -52,7 +51,6 @@ public class UnwheezeDbTest extends TestCase {
         AirData airdataJson = gson.fromJson(json,AirData.class);
         AirData airdataExp = gson.fromJson(expected,AirData.class);
 
-        System.out.println(expected);
         assertTrue(EqualsBuilder.reflectionEquals(airdataExp,airdataJson));
 
     }

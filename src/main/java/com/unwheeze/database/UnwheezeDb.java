@@ -65,15 +65,21 @@ public class UnwheezeDb {
         HashMap<String,Object> fields = ReflectionUtils.getObject(new DbScheme());
         Iterator it = fields.entrySet().iterator();
         while(it.hasNext()) {
-            Map.Entry<String,String> pair = (Map.Entry<String,String>) it.next();
+            Map.Entry<String, String> pair = (Map.Entry<String, String>) it.next();
 
             String key = (String) pair.getKey();
-            if(key.charAt(0) == '_' && key != "_VERSION"){
-                boolean containTable = r.tableList().contains((String)pair.getValue()).run(connection);
-                if(!containTable) r.tableCreate((String)pair.getValue()).run(connection);
+            if (key.charAt(0) == '_' && key != "_VERSION") {
+                boolean containTable = r.tableList().contains((String) pair.getValue()).run(connection);
+                if (!containTable) r.tableCreate((String) pair.getValue()).run(connection);
             }
         }
 
+        return 0;
+    }
+
+    public int assertVersionUpToDate() throws IllegalAccessException {
+        HashMap<String,Object> fields = ReflectionUtils.getObject(new DbScheme());
+        //TODO : Assert if db is up to date, if not, then update it
         return 0;
     }
 
