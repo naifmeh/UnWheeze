@@ -10,34 +10,59 @@ public class User {
     private String location;
     private String city;
     private String country;
+    private String salt;
+    private String pwd;
 
-    public User(String ID, String firstName, String lastName, String imgUrl, String email, String location, String city, String country) {
+
+    public User(String ID, String pwd, String salt,String firstName, String lastName, String imgUrl, String email, String location, String city, String country) {
         this.ID = ID;
         this.firstName = firstName;
         this.lastName = lastName;
-        ImgUrl = imgUrl;
+        this.ImgUrl = imgUrl;
         this.email = email;
         this.location = location;
         this.city = city;
         this.country = country;
+        this.pwd = pwd;
+        this.salt = salt;
     }
 
-    public User(String ID, String firstName, String lastName, String email) {
+    public User(String ID, String pwd, String salt, String firstName, String lastName, String email) {
         this.ID = ID;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
+        this.pwd = pwd;
+        this.salt = salt;
     }
 
-    public User(String ID, String firstName, String lastName, String email, String location) {
+    public User(String ID, String pwd, String salt, String firstName, String lastName, String email, String location) {
         this.ID = ID;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.location = location;
+        this.pwd = pwd;
+        this.salt = salt;
     }
 
     public User() {
+    }
+
+    public String getSalt() {
+        return salt;
+    }
+
+    public void setSalt(String salt) {
+        this.salt = salt;
+    }
+
+    public String getPwd() {
+        return pwd;
+    }
+
+    public void setPwd(String pwd) {
+        this.pwd = pwd;
     }
 
     public String getID() {

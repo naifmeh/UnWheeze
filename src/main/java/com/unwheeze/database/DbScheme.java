@@ -15,4 +15,15 @@ public class DbScheme {
     public final static String AIRDATA_LATITUDE = "latitude";
     public final static String AIRDATA_UPLOADER = "source";
     public final static String AIRDATA_DATETIME = "source";
+
+    public final static String _USERS = "users";
+    public final static String USERS_FIRSTNAME = "firstName";
+    public final static String USERS_LASTNAME = "lastName";
+    public final static String USERS_IMG = "imgUrl";
+    public final static String USERS_EMAIL = "email";
+    public final static String USERS_LOCATION = "location";
+    public final static String USERS_CITY = "city";
+    public final static String USERS_PWD = "pwd";
+    public final static String USERS_SALT = "salt";
+
 }

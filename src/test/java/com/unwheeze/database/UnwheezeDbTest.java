@@ -2,6 +2,7 @@ package com.unwheeze.database;
 
 import com.google.gson.Gson;
 import com.unwheeze.beans.AirData;
+import com.unwheeze.beans.User;
 import junit.framework.TestCase;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.junit.Test;
@@ -53,5 +54,30 @@ public class UnwheezeDbTest extends TestCase {
 
         assertTrue(EqualsBuilder.reflectionEquals(airdataExp,airdataJson));
 
+    }
+
+    @Test
+    public void testPutUserInCollection() {
+        UnwheezeDb db = new UnwheezeDb();
+        User user = new User("57859854e","5e4f5e1ed15","5d7e8f5d1d5","Naif","Mehanna","","naif.meh@gmail.com","15.055020,50.265445","Lille","France");
+
+        int result = 0;
+        if(!db.isUserInCollection("naif.meh@gmail.com","email"))
+            result = db.putUserInCollection(user);
+
+        assertEquals(0,result);
+    }
+    @Test
+    public void testIsUserInCollection() {
+        UnwheezeDb db = new UnwheezeDb();
+        String emailGood = "naif.meh@gmail.com";
+        String emailFalse = "naif.meha@gmail.com";
+        String field = "email";
+
+        boolean response1 = db.isUserInCollection(emailGood,field);
+        boolean response2 = db.isUserInCollection(emailFalse,field);
+
+        assertEquals(false,response2);
+        assertEquals(true,response1);
     }
 }
