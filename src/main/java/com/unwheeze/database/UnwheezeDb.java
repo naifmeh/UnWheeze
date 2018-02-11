@@ -78,6 +78,10 @@ public class UnwheezeDb {
 
         return 0;
     }
+
+    public String generateUUID() {
+        return r.uuid().run(connection);
+    }
     //------------------------------ USERS
 
     public int putUserInCollection(User user) {

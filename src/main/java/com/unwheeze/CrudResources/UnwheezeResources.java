@@ -84,14 +84,11 @@ public class UnwheezeResources {
         JWTBuilder jwtBuilder = new JWTBuilder(user.getID(),user.getEmail(),"0",ISSUER);
         String jwt = jwtBuilder.buildJWT();
 
-        Response reponse = Response.status(Response.Status.OK)
+        return Response.status(Response.Status.OK)
                 .header("Cache-Control","no-cache")
                 .header("Pragma","no-cache")
                 .entity(jwt)
                 .build();
-
-        return reponse;
-
 
     }
 }
