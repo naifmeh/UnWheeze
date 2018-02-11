@@ -11,6 +11,7 @@ import com.unwheeze.utils.JsonErrorStatus;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.bouncycastle.util.encoders.Base64;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
@@ -18,6 +19,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.io.UnsupportedEncodingException;
 import java.util.regex.Pattern;
 
 
@@ -42,10 +44,15 @@ public class UserResources {
         boolean userInDb = db.isUserInCollection(email, DbScheme.USERS_EMAIL);
         if(!userInDb)
             return Response.status(Response.Status.BAD_REQUEST)
-                    .entity(JsonErrorStatus.errorEmailNotInDb)
+                    .entity(JsonErrorStatus.errorEmailInDb)
                     .build();
 
-        String pwd = userJson.get(DbScheme.USERS_PWD).getAsString();
+        String pwd = "";
+        try {
+            pwd = new String(Base64.decode(userJson.get(DbScheme.USERS_PWD).getAsString()),"UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
         if(pwd.isEmpty() || pwd == null){
             String errorCodeEmptyPwd = "{'errorStatus':'Password field is empty'}";
             return Response.status(Response.Status.EXPECTATION_FAILED)
@@ -60,7 +67,7 @@ public class UserResources {
         userJson.addProperty(DbScheme.USERS_PWD,ByteConverter.HexToStr(encryptedPwd));
         //-----------------
         String uuid = db.generateUUID();
-
+        userJson.addProperty(DbScheme.USERS_ID,uuid);
         User user = gson.fromJson(userJson,User.class);
 
         //------ Verifying email

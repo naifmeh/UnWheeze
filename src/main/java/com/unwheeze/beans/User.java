@@ -2,7 +2,7 @@ package com.unwheeze.beans;
 
 public class User {
 
-    private String ID;
+    private String id;
     private String firstName;
     private String lastName;
     private String ImgUrl;
@@ -14,8 +14,8 @@ public class User {
     private String pwd;
 
 
-    public User(String ID, String pwd, String salt,String firstName, String lastName, String imgUrl, String email, String location, String city, String country) {
-        this.ID = ID;
+    public User(String id, String pwd, String salt,String firstName, String lastName, String imgUrl, String email, String location, String city, String country) {
+        this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.ImgUrl = imgUrl;
@@ -27,8 +27,8 @@ public class User {
         this.salt = salt;
     }
 
-    public User(String ID, String pwd, String salt, String firstName, String lastName, String email) {
-        this.ID = ID;
+    public User(String id, String pwd, String salt, String firstName, String lastName, String email) {
+        this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
@@ -36,8 +36,8 @@ public class User {
         this.salt = salt;
     }
 
-    public User(String ID, String pwd, String salt, String firstName, String lastName, String email, String location) {
-        this.ID = ID;
+    public User(String id, String pwd, String salt, String firstName, String lastName, String email, String location) {
+        this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
@@ -65,12 +65,12 @@ public class User {
         this.pwd = pwd;
     }
 
-    public String getID() {
-        return ID;
+    public String getid() {
+        return id;
     }
 
-    public void setID(String ID) {
-        this.ID = ID;
+    public void setid(String id) {
+        this.id = id;
     }
 
     public String getFirstName() {

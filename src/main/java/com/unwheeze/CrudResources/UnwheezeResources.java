@@ -81,7 +81,7 @@ public class UnwheezeResources {
         if(!isHashCorrect)
             return Response.status(Response.Status.FORBIDDEN).entity(JsonErrorStatus.errorIncorrectCred).build();
 
-        JWTBuilder jwtBuilder = new JWTBuilder(user.getID(),user.getEmail(),"0",ISSUER);
+        JWTBuilder jwtBuilder = new JWTBuilder(user.getid(),user.getEmail(),"0",ISSUER);
         String jwt = jwtBuilder.buildJWT();
 
         return Response.status(Response.Status.OK)
