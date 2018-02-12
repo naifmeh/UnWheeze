@@ -56,11 +56,12 @@ public class UnwheezeResources {
         String email = decodedStr[0];
         String pwd = decodedStr[1];
         log.debug("Initializing client verification for user "+email);
-
+        System.out.println(email);
         UnwheezeDb db = new UnwheezeDb();
         boolean dbResp = false;
 
         dbResp = db.isUserInCollection(email, DbScheme.USERS_EMAIL);
+        System.out.println(dbResp);
         if(!dbResp)
             return Response.status(Response.Status.BAD_REQUEST).build();
 

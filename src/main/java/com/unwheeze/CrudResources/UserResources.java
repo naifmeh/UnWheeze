@@ -2,12 +2,18 @@ package com.unwheeze.CrudResources;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import com.rethinkdb.gen.ast.Json;
 import com.unwheeze.beans.User;
 import com.unwheeze.database.DbScheme;
 import com.unwheeze.database.UnwheezeDb;
 import com.unwheeze.security.FieldCrypter;
+import com.unwheeze.security.JWTBuilder;
 import com.unwheeze.utils.ByteConverter;
 import com.unwheeze.utils.JsonErrorStatus;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.UnsupportedJwtException;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -17,8 +23,11 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.regex.Pattern;
 
@@ -108,4 +117,61 @@ public class UserResources {
         }
 
     }
+
+    @POST
+    @Path("/signin")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response signInUser(@Context HttpHeaders header) {
+        log.info("Signing in user");
+
+        String authHeader = header.getHeaderString("Authorization");
+        String jwt;
+        try {
+            jwt = new String(Base64.decode(authHeader.split("Bearer")[1]),"UTF-8");
+        } catch(UnsupportedEncodingException e) {
+            log.error(e.getMessage());
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        }
+
+        Claims claims;
+        try {
+            claims = (new JWTBuilder()).getClaims(jwt);
+        } catch(ExpiredJwtException | UnsupportedJwtException | MalformedJwtException
+                | IllegalArgumentException | IOException e) {
+            log.error(e.getMessage());
+            return Response.status(Response.Status.FORBIDDEN).build();
+        }
+
+        if(claims.isEmpty())
+            return Response.status(Response.Status.EXPECTATION_FAILED)
+                    .entity(JsonErrorStatus.errorInvalidAuthTkn)
+                    .build();
+
+        String userId = claims.getSubject().split("user/")[1];
+        UnwheezeDb db = new UnwheezeDb();
+
+        boolean userExists = db.isUserInCollection(userId,DbScheme.USERS_ID);
+
+        if(!userExists)
+            return Response.status(Response.Status.BAD_REQUEST).entity(JsonErrorStatus.errorEmailNotInDb).build();
+
+        String userDoc;
+        try {
+            userDoc = db.getUserFromCollection(userId,DbScheme.USERS_ID);
+        } catch (IllegalAccessException e) {
+            log.error(e.getMessage());
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        }
+
+        JsonObject jsonUser = gson.fromJson(userDoc, JsonObject.class);
+        jsonUser.remove(DbScheme.USERS_PWD);
+        jsonUser.remove(DbScheme.USERS_SALT);
+
+        userDoc = gson.toJson(jsonUser);
+
+        return Response.status(Response.Status.OK)
+                .entity(userDoc).build();
+    }
+
+
 }

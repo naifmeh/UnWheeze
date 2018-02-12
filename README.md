@@ -11,3 +11,15 @@ Real-time server backend for the Unwheeze project develloped by Paul Ribeiro and
   Ainsi, le serveur permettra de stocker les informations relatives aux locations et à la qualité de l'air dans ces locations, les informations des utilisateurs, et les informations liées à la carte.
 
 Enfin, il est nescessaire d'implémenter les algorithmes de recherche sur ce serveur ou un autre serveur à part ( OPTIONNEL ) 
+
+## Description du fonctionnement 
+
+Lancer Rethinkdb sur le port habituel
+Ajouter un utilisateur via http://localhost:8080/unwheeze/users/signup : METHODE POST, body Json avec les champs du Bean User
+moins le salt.
+
+Pour se connecter, http://localhost:8080/unwheeze/auth/token : METHODE GET avec en header : Authorization : Basic --mail:mdp en base64--
+Retourn un Jwt en RAW BODY (PLAIN TEXT)
+
+Utiliser ce jwt en POST dans http://localhost:8080/unwheeze/users/signin avec en header : Authorization : Bearer --jwt en base64--
+Retourne JSON avec infos utilisateur.

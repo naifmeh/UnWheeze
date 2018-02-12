@@ -26,9 +26,9 @@ public class JWTBuilder {
     private String scope;
     private String email;
     private Date expDate;
-    private final long TOKEN_DURATION = 7200;
+    private final long TOKEN_DURATION = 10000000; //TODO: Change this and work on refresh token
 
-    private String pathPvKey;
+    private String pathPvKey = "D:\\Naif Mehanna\\Documents\\Programmation\\IdeaProjects\\UnwheezeServer\\private.pem";
 
     public JWTBuilder() {
     }
