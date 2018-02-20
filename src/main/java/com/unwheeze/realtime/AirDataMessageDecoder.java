@@ -1,20 +1,21 @@
 package com.unwheeze.realtime;
 
 import com.google.gson.Gson;
+import com.unwheeze.beans.AirData;
 
 import javax.websocket.DecodeException;
 import javax.websocket.Decoder;
 import javax.websocket.EndpointConfig;
 
-public class AirDataMessageDecoder implements Decoder.Text<AirDataMessage> {
+public class AirDataMessageDecoder implements Decoder.Text<AirData> {
 
     @Override
-    public AirDataMessage decode(String s) throws DecodeException {
+    public AirData decode(String s) throws DecodeException {
         if(s == null)
             throw new DecodeException(s,"Decoding string went wrong");
 
         Gson gson = new Gson();
-        AirDataMessage airDataMessage = gson.fromJson(s,AirDataMessage.class);
+        AirData airDataMessage = gson.fromJson(s,AirData.class);
 
         return airDataMessage;
     }

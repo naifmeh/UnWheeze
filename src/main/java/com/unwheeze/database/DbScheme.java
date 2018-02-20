@@ -22,9 +22,13 @@ public class DbScheme {
     public final static String USERS_LASTNAME = "lastName";
     public final static String USERS_IMG = "imgUrl";
     public final static String USERS_EMAIL = "email";
+    public final static String USERS_SCOPE = "scope";
     public final static String USERS_LOCATION = "location";
     public final static String USERS_CITY = "city";
     public final static String USERS_PWD = "pwd";
     public final static String USERS_SALT = "salt";
+
+    public final static String _WSAUTH = "wsauth";
+    public final static String WSAUTH_ID = "id";
 
 }

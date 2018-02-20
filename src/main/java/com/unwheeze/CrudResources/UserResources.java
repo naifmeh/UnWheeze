@@ -3,12 +3,15 @@ package com.unwheeze.CrudResources;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.rethinkdb.gen.ast.Json;
+import com.rethinkdb.model.MapObject;
 import com.unwheeze.beans.User;
 import com.unwheeze.database.DbScheme;
 import com.unwheeze.database.UnwheezeDb;
+import com.unwheeze.database.UnwheezeDbUsers;
 import com.unwheeze.security.FieldCrypter;
 import com.unwheeze.security.JWTBuilder;
 import com.unwheeze.utils.ByteConverter;
+import com.unwheeze.utils.ClientScopes;
 import com.unwheeze.utils.JsonErrorStatus;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -19,10 +22,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.bouncycastle.util.encoders.Base64;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
@@ -46,12 +46,12 @@ public class UserResources {
     @Produces(MediaType.APPLICATION_JSON)
     public Response insertNewUser(String json) {
 
-        UnwheezeDb db = new UnwheezeDb();
+        UnwheezeDbUsers db = new UnwheezeDbUsers();
         JsonObject userJson = gson.fromJson(json,JsonObject.class);
 
         String email = userJson.get(DbScheme.USERS_EMAIL).getAsString();
         boolean userInDb = db.isUserInCollection(email, DbScheme.USERS_EMAIL);
-        if(!userInDb)
+        if(userInDb)
             return Response.status(Response.Status.BAD_REQUEST)
                     .entity(JsonErrorStatus.errorEmailInDb)
                     .build();
@@ -118,6 +118,8 @@ public class UserResources {
 
     }
 
+
+
     @POST
     @Path("/signin")
     @Produces(MediaType.APPLICATION_JSON)
@@ -148,7 +150,7 @@ public class UserResources {
                     .build();
 
         String userId = claims.getSubject().split("user/")[1];
-        UnwheezeDb db = new UnwheezeDb();
+        UnwheezeDbUsers db = new UnwheezeDbUsers();
 
         boolean userExists = db.isUserInCollection(userId,DbScheme.USERS_ID);
 
@@ -171,6 +173,50 @@ public class UserResources {
 
         return Response.status(Response.Status.OK)
                 .entity(userDoc).build();
+    }
+
+    @DELETE
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/remove")
+    public Response deleteUser(@Context HttpHeaders headers) {
+        //TODO : Rewrite this shit
+        String authHeader = headers.getHeaderString("Authorization");
+        String jwt;
+        try {
+            jwt = new String(Base64.decode(authHeader.split("Bearer")[1]),"UTF-8");
+        } catch(UnsupportedEncodingException e) {
+            log.error(e.getMessage());
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        }
+
+        Claims claims;
+        try {
+            claims = (new JWTBuilder()).getClaims(jwt);
+        } catch(ExpiredJwtException | UnsupportedJwtException | MalformedJwtException
+                | IllegalArgumentException | IOException e) {
+            log.error(e.getMessage());
+            return Response.status(Response.Status.FORBIDDEN).build();
+        }
+
+        if(claims.isEmpty())
+            return Response.status(Response.Status.EXPECTATION_FAILED)
+                    .entity(JsonErrorStatus.errorInvalidAuthTkn)
+                    .build();
+
+        int userScope = (int) claims.get("scope");
+        String userId = claims.getSubject().split("user/")[1];
+        //TODO: verifier user a les droits nescessaire
+        UnwheezeDbUsers db = new UnwheezeDbUsers();
+        MapObject reponse = db.removeUser(userId);
+
+        int errors = (int) reponse.get("errors");
+        if(errors != 0)
+            return Response.status(Response.Status.EXPECTATION_FAILED)
+                    .build();
+
+        return Response.status(Response.Status.OK)
+                .build();
+
     }
 
 

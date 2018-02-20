@@ -8,6 +8,7 @@ import com.rethinkdb.model.MapObject;
 import com.rethinkdb.net.Connection;
 import com.rethinkdb.net.Cursor;
 import com.unwheeze.beans.AirData;
+import com.unwheeze.beans.AuthClient;
 import com.unwheeze.beans.User;
 import com.unwheeze.utils.ReflectionUtils;
 import org.apache.logging.log4j.LogManager;
@@ -23,19 +24,19 @@ public class UnwheezeDb {
 
     private static final Logger log = LogManager.getLogger(UnwheezeDb.class);
 
-    private static final String HOST = "localhost";
-    private static final int PORT = 28015;
+    protected static final String HOST = "localhost";
+    protected static final int PORT = 28015;
 
-    private  RethinkDB r;
-    private  Connection connection;
+    protected  RethinkDB r;
+    protected  Connection connection;
 
-    private  boolean isDbInit = false;
+    protected  boolean isDbInit = false;
 
-    private Gson gson = new Gson();
+    protected Gson gson = new Gson();
 
-    private static final String AIRTABLE = DbScheme._AIRDATA;
-    private static final String USERTABLE = DbScheme._USERS;
-
+    protected static final String AIRTABLE = DbScheme._AIRDATA;
+    protected static final String USERTABLE = DbScheme._USERS;
+    protected static final String AUTHTABLE = DbScheme._WSAUTH;
     public UnwheezeDb() {
         if(!isDbInit) {
             r = RethinkDB.r;
@@ -82,73 +83,19 @@ public class UnwheezeDb {
     public String generateUUID() {
         return r.uuid().run(connection);
     }
-    //------------------------------ USERS
 
-    public int putUserInCollection(User user) {
-        String jsonUser = gson.toJson(user);
 
-        MapObject userHashMap = gson.fromJson(jsonUser,new TypeToken<MapObject>(){}.getType());
-        HashMap<String,Object> result = r.table(USERTABLE).insert(userHashMap)
+    //----------------------------- AUTH
+
+    public int insertAuthKey(AuthClient auth) {
+        MapObject authMap = gson.fromJson(gson.toJson(auth),MapObject.class);
+        MapObject result = r.table(AUTHTABLE)
+                .insert(authMap)
                 .run(connection);
 
-        return (int)((long)result.get("errors"));
+        return (int)((long) result.get("errors"));
     }
 
-    public boolean isUserInCollection(String data,String field) {
-        log.info("Initializing user check by "+field);
-        Cursor cursor = r.table(USERTABLE)
-                .filter(row -> row.getField(field).eq(data))
-                .run(connection);
-
-        if(cursor.bufferedSize() == 1) {
-            log.info("Existing user found");
-            return true;
-        }
-
-        return false;
-    }
-
-    public String getUserFromCollection(String data,String field) throws IllegalAccessException {
-        log.info("Retrieving user");
-
-        Cursor cursor = r.table(USERTABLE)
-                .filter(row -> row.getField(field)
-                .eq(data))
-                .run(connection);
-
-        if(!cursor.hasNext())
-            throw new IllegalAccessException("User was not found");
-
-        HashMap<Object,String> user = (HashMap<Object,String>) cursor.next();
-        String jsonUser = gson.toJson(user,new TypeToken<HashMap<Object,String>>(){}.getType());
-
-        return jsonUser;
-
-    }
-
-    //----------------------------- AIR DATA
-    public int putDataInCollection(AirData airData) {
-        String jsonAir = gson.toJson(airData);
-        MapObject airDataHashMap = gson.fromJson(jsonAir, new TypeToken<MapObject>(){}.getType());
-        HashMap<String,Object> result = r.table(AIRTABLE).insert(airDataHashMap)
-                .run(connection);
-
-        return (int)((long)result.get("errors"));
-    }
-
-    public String getDataFromCollection(String id) throws IllegalAccessException{
-        log.info("Retrieving AirData by ID");
-
-        Cursor cursor = r.table(AIRTABLE)
-                .filter(row -> row.getField(DbScheme.AIRDATA_ID).eq(id))
-                .run(connection);
-        if(!cursor.hasNext()) throw new IllegalAccessException("ID was not found");
-        //TODO : MAYBE Write own exceptions extending IllegalAccess
-        HashMap<Object,String> airData = (HashMap<Object,String>) cursor.next();
-        String jsonAirData = gson.toJson(airData, new TypeToken<HashMap<Object,String>>(){}.getType());
-
-        return jsonAirData;
-    }
 
 
 }

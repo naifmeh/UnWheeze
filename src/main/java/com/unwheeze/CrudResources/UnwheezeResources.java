@@ -1,9 +1,13 @@
 package com.unwheeze.CrudResources;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.rethinkdb.gen.ast.Http;
+import com.unwheeze.beans.AuthClient;
 import com.unwheeze.beans.User;
 import com.unwheeze.database.DbScheme;
 import com.unwheeze.database.UnwheezeDb;
+import com.unwheeze.database.UnwheezeDbUsers;
 import com.unwheeze.security.FieldCrypter;
 import com.unwheeze.security.JWTBuilder;
 import com.unwheeze.utils.ByteConverter;
@@ -33,6 +37,27 @@ public class UnwheezeResources {
     private String ISSUER = "UnWheeze";
 
     @GET
+    @Path("/clientToken")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response authNotConnected(@Context HttpHeaders headers) {
+        //TODO : VERIFY ORIGIN HEADER TO ONLY AUTH CLIENT FROM UNWHEEZE
+
+        UnwheezeDb db = new UnwheezeDb();
+        String key = db.generateUUID();
+
+        AuthClient auth = new AuthClient(key);
+        int response = db.insertAuthKey(auth);
+
+        if(response < 0)
+            return Response.status(Response.Status.EXPECTATION_FAILED)
+                    .build();
+
+
+        return Response.status(Response.Status.OK).entity(gson.toJson(auth))
+                .build();
+    }
+
+    @GET
     @Path("/token")
     @Produces(MediaType.APPLICATION_JSON)
     public Response authClient(@Context HttpHeaders headers) {
@@ -57,7 +82,7 @@ public class UnwheezeResources {
         String pwd = decodedStr[1];
         log.debug("Initializing client verification for user "+email);
         System.out.println(email);
-        UnwheezeDb db = new UnwheezeDb();
+        UnwheezeDbUsers db = new UnwheezeDbUsers();
         boolean dbResp = false;
 
         dbResp = db.isUserInCollection(email, DbScheme.USERS_EMAIL);
