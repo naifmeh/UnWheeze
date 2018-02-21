@@ -20,6 +20,8 @@ public class AirResources {
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/putAirData")
     public Response insertData(String json) {
+        //TODO : Check security key first
+
         return null;
     }
 
@@ -28,6 +30,7 @@ public class AirResources {
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/getAirCollection")
     public Response getCollectionData(String json) {
+        //TODO : Check security key first
         return null;
     }
 
@@ -36,6 +39,7 @@ public class AirResources {
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/getAirData")
     public Response getAirData(String json) {
+        //TODO : Check security key first
         return null;
     }
 

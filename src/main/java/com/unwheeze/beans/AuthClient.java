@@ -2,10 +2,10 @@ package com.unwheeze.beans;
 
 public class AuthClient {
 
-    private String id;
+    private String key;
 
-    public AuthClient(String id) {
-        this.id = id;
+    public AuthClient(String key) {
+        this.key = key;
     }
 
     public AuthClient() {
@@ -13,10 +13,10 @@ public class AuthClient {
 
     public String getId() {
 
-        return id;
+        return key;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setId(String key) {
+        this.key = key;
     }
 }

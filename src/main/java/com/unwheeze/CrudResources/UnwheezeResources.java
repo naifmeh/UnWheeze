@@ -7,6 +7,7 @@ import com.unwheeze.beans.AuthClient;
 import com.unwheeze.beans.User;
 import com.unwheeze.database.DbScheme;
 import com.unwheeze.database.UnwheezeDb;
+import com.unwheeze.database.UnwheezeDbAuth;
 import com.unwheeze.database.UnwheezeDbUsers;
 import com.unwheeze.security.FieldCrypter;
 import com.unwheeze.security.JWTBuilder;
@@ -42,11 +43,11 @@ public class UnwheezeResources {
     public Response authNotConnected(@Context HttpHeaders headers) {
         //TODO : VERIFY ORIGIN HEADER TO ONLY AUTH CLIENT FROM UNWHEEZE
 
-        UnwheezeDb db = new UnwheezeDb();
+        UnwheezeDb db = new UnwheezeDbAuth();
         String key = db.generateUUID();
 
         AuthClient auth = new AuthClient(key);
-        int response = db.insertAuthKey(auth);
+        int response = ((UnwheezeDbAuth) db).insertAuthKey(auth);
 
         if(response < 0)
             return Response.status(Response.Status.EXPECTATION_FAILED)
@@ -81,7 +82,6 @@ public class UnwheezeResources {
         String email = decodedStr[0];
         String pwd = decodedStr[1];
         log.debug("Initializing client verification for user "+email);
-        System.out.println(email);
         UnwheezeDbUsers db = new UnwheezeDbUsers();
         boolean dbResp = false;
 
@@ -107,7 +107,7 @@ public class UnwheezeResources {
         if(!isHashCorrect)
             return Response.status(Response.Status.FORBIDDEN).entity(JsonErrorStatus.errorIncorrectCred).build();
 
-        JWTBuilder jwtBuilder = new JWTBuilder(user.getid(),user.getEmail(),"0",ISSUER);
+        JWTBuilder jwtBuilder = new JWTBuilder(user.getid(),user.getEmail(),"read,upload",ISSUER);
         String jwt = jwtBuilder.buildJWT();
 
         return Response.status(Response.Status.OK)

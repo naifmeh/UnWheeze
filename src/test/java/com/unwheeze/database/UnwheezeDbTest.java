@@ -22,15 +22,15 @@ public class UnwheezeDbTest extends TestCase {
         String dateTime = Long.toString((new Date()).getTime());
 
         AirData airData = new AirData(location,pm10,pm25,dateTime,userId);
-        UnwheezeDb db = new UnwheezeDb();
-        int res = db.putDataInCollection(airData);
+        UnwheezeDb db = new UnwheezeDbAirData();
+        int res =((UnwheezeDbAirData) db).putDataInCollection(airData);
         System.out.println(res);
         assertEquals(0,res);
     }
 
     @Test
     public void testGetDataFromCollection() {
-        UnwheezeDb db = new UnwheezeDb();
+        UnwheezeDbAirData db = new UnwheezeDbAirData();
         String id = "debac791-5b86-4151-a2f9-b32974974f62";
         String json="";
         try{
@@ -58,7 +58,7 @@ public class UnwheezeDbTest extends TestCase {
 
     @Test
     public void testPutUserInCollection() {
-        UnwheezeDb db = new UnwheezeDb();
+        UnwheezeDbUsers db = new UnwheezeDbUsers();
         User user = new User("57859854e","5e4f5e1ed15","5d7e8f5d1d5","Naif","Mehanna","","naif.meh@gmail.com","15.055020,50.265445","Lille","France");
 
         int result = 0;
@@ -69,7 +69,7 @@ public class UnwheezeDbTest extends TestCase {
     }
     @Test
     public void testIsUserInCollection() {
-        UnwheezeDb db = new UnwheezeDb();
+        UnwheezeDbUsers db = new UnwheezeDbUsers();
         String emailGood = "naif.meh@gmail.com";
         String emailFalse = "naif.meha@gmail.com";
         String field = "email";

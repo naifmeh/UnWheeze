@@ -6,6 +6,7 @@ import com.rethinkdb.net.Cursor;
 import com.unwheeze.beans.AirData;
 
 import java.util.HashMap;
+import java.util.Iterator;
 
 public class UnwheezeDbAirData extends UnwheezeDb {
 
@@ -34,5 +35,10 @@ public class UnwheezeDbAirData extends UnwheezeDb {
         String jsonAirData = super.gson.toJson(airData, new TypeToken<HashMap<Object,String>>(){}.getType());
 
         return jsonAirData;
+    }
+
+    public Cursor provideChangefeed() {
+        return r.table(AIRTABLE).changes()
+                .run(connection);
     }
 }

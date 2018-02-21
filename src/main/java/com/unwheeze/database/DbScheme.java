@@ -30,5 +30,5 @@ public class DbScheme {
 
     public final static String _WSAUTH = "wsauth";
     public final static String WSAUTH_ID = "id";
-
+    public final static String WSAUTH_KEY = "key";
 }

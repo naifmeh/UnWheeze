@@ -85,16 +85,7 @@ public class UnwheezeDb {
     }
 
 
-    //----------------------------- AUTH
 
-    public int insertAuthKey(AuthClient auth) {
-        MapObject authMap = gson.fromJson(gson.toJson(auth),MapObject.class);
-        MapObject result = r.table(AUTHTABLE)
-                .insert(authMap)
-                .run(connection);
-
-        return (int)((long) result.get("errors"));
-    }
 
 
 

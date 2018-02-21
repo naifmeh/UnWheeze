@@ -48,7 +48,7 @@ public class JWTBuilder {
     }
 
     public String getSignatureKey() throws IOException {
-        String key="";
+        String key;
         InputStreamReader in = new InputStreamReader(
                 new FileInputStream(pathPvKey),"UTF-8"); {
                 StringBuilder builder = new StringBuilder();
