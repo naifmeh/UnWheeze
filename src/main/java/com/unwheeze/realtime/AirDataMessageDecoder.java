@@ -1,6 +1,7 @@
 package com.unwheeze.realtime;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 import com.unwheeze.beans.AirData;
 
 import javax.websocket.DecodeException;
@@ -8,13 +9,12 @@ import javax.websocket.Decoder;
 import javax.websocket.EndpointConfig;
 
 public class AirDataMessageDecoder implements Decoder.Text<AirData> {
+    private Gson gson = new Gson();
 
     @Override
     public AirData decode(String s) throws DecodeException {
         if(s == null)
             throw new DecodeException(s,"Decoding string went wrong");
-
-        Gson gson = new Gson();
         AirData airDataMessage = gson.fromJson(s,AirData.class);
 
         return airDataMessage;
@@ -22,7 +22,12 @@ public class AirDataMessageDecoder implements Decoder.Text<AirData> {
 
     @Override
     public boolean willDecode(String s) {
-        return true; //changed to true, false by default
+        try{
+            gson.fromJson(s,AirData.class);
+            return true;
+        } catch(JsonSyntaxException e) {
+            return false;
+        }
     }
 
     @Override

@@ -9,41 +9,52 @@ import com.unwheeze.database.UnwheezeDbAirData;
 import javax.websocket.*;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Observer;
 
 @ServerEndpoint(
         value = "/realtime/dataflow",
         encoders = {AirDataMessageEncoder.class},
-        //decoders = {AirDataMessageDecoder.class},
-        configurator = com.unwheeze.realtime.ServerEndpoint.class)
+        decoders = {AirDataMessageDecoder.class})
+        //configurator = com.unwheeze.realtime.ServerEndpoint.class)
 public class AirDataWebSockets {
 
-    private boolean isValidKey = false;
-    private String matchedKey = "[a-z0-9]{8}\\-([a-z0-9]{4}\\-){3}[a-z0-9]{12}";
-    Cursor cursor;
+    private Thread thread;
+    private Cursor cursor;
+
+    private Gson gson = new Gson();
 
     public AirDataWebSockets() {}
 
     @OnOpen
     public void onOpen(Session session) throws IOException {
-        System.out.println("opened");
 
         UnwheezeDb db = new UnwheezeDbAirData();
-        Cursor cursor = ((UnwheezeDbAirData) db).provideChangefeed();
-        for(Object change : cursor) {
-            session.getAsyncRemote().sendText((String)change);
-            System.out.println(change);
-        }
+        cursor = ((UnwheezeDbAirData) db).provideChangefeed();
+        Runnable run = () -> {
+            for (Object change : cursor) {
+                String jsonHashMap = gson.toJson(change,HashMap.class);
+                for(Session sess : session.getOpenSessions())
+                    sess.getAsyncRemote().sendObject(gson.fromJson(jsonHashMap,AirDataMessage.class));
+            }
+        };
+
+        this.thread = new Thread(run);
+        this.thread.start();
+        System.out.println("opened");
     }
 
     @OnMessage
-    public void onMessage(Session session, String message) throws IOException {
-
+    public void onMessage(Session session, AirData message) throws IOException {
+        UnwheezeDb db = new UnwheezeDbAirData();
+        if(message != null)
+            ((UnwheezeDbAirData) db).putDataInCollection(message);
     }
 
     @OnClose
     public void onClose(Session session) throws IOException {
         System.out.println("closed");
+        this.thread = null;
     }
 
     @OnError
