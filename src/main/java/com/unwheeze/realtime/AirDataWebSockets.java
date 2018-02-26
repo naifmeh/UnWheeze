@@ -1,6 +1,8 @@
 package com.unwheeze.realtime;
 
 import com.google.gson.Gson;
+import com.rethinkdb.RethinkDB;
+import com.rethinkdb.gen.ast.Point;
 import com.rethinkdb.net.Cursor;
 import com.unwheeze.beans.AirData;
 import com.unwheeze.database.UnwheezeDb;
@@ -10,7 +12,6 @@ import javax.websocket.*;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.Observer;
 
 @ServerEndpoint(
         value = "/realtime/dataflow",
@@ -21,21 +22,22 @@ public class AirDataWebSockets {
 
     private Thread thread;
     private Cursor cursor;
+    private UnwheezeDb db = new UnwheezeDbAirData();
 
     private Gson gson = new Gson();
 
-    public AirDataWebSockets() {}
+    public AirDataWebSockets() {
+    }
 
     @OnOpen
     public void onOpen(Session session) throws IOException {
 
-        UnwheezeDb db = new UnwheezeDbAirData();
         cursor = ((UnwheezeDbAirData) db).provideChangefeed();
         Runnable run = () -> {
             for (Object change : cursor) {
-                String jsonHashMap = gson.toJson(change,HashMap.class);
-                for(Session sess : session.getOpenSessions())
-                    sess.getAsyncRemote().sendObject(gson.fromJson(jsonHashMap,AirDataMessage.class));
+                String jsonHashMap = gson.toJson(change, HashMap.class);
+                for (Session sess : session.getOpenSessions())
+                    sess.getAsyncRemote().sendObject(gson.fromJson(jsonHashMap, AirDataMessage.class));
             }
         };
 
@@ -46,9 +48,14 @@ public class AirDataWebSockets {
 
     @OnMessage
     public void onMessage(Session session, AirData message) throws IOException {
-        UnwheezeDb db = new UnwheezeDbAirData();
-        if(message != null)
+
+        if (message != null) {
+            Point geoloc = RethinkDB.r.point(Float.parseFloat(message.getLocation().split(",")[0])
+                    , Float.parseFloat(message.getLocation().split(",")[1]));
+            message.setGeolocation(geoloc);
             ((UnwheezeDbAirData) db).putDataInCollection(message);
+        }
+
     }
 
     @OnClose

@@ -55,7 +55,7 @@ public class UnwheezeDbUsers extends UnwheezeDb {
 
     }
 
-    public MapObject removeUser(String field) {
+    public HashMap<String,Object> removeUser(String field) {
 
         return r.table(USERTABLE).get(field).delete().optArg("return_changes",true)
                 .run(connection);

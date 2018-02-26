@@ -43,6 +43,7 @@ public class UnwheezeResources {
     public Response authNotConnected(@Context HttpHeaders headers) {
         //TODO : VERIFY ORIGIN HEADER TO ONLY AUTH CLIENT FROM UNWHEEZE
 
+
         UnwheezeDb db = new UnwheezeDbAuth();
         String key = db.generateUUID();
 

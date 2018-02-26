@@ -13,6 +13,7 @@ import com.unwheeze.security.JWTBuilder;
 import com.unwheeze.utils.ByteConverter;
 import com.unwheeze.utils.ClientScopes;
 import com.unwheeze.utils.JsonErrorStatus;
+import com.unwheeze.utils.SecurityVerificationUtils;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
@@ -29,6 +30,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.util.HashMap;
 import java.util.regex.Pattern;
 
 
@@ -44,7 +46,8 @@ public class UserResources {
     @Path("/signup")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response insertNewUser(String json) {
+    public Response insertNewUser(String json,@Context HttpHeaders headers) {
+        //TODO: Check API KEY
 
         UnwheezeDbUsers db = new UnwheezeDbUsers();
         JsonObject userJson = gson.fromJson(json,JsonObject.class);
@@ -119,37 +122,20 @@ public class UserResources {
     }
 
 
-
     @POST
     @Path("/signin")
     @Produces(MediaType.APPLICATION_JSON)
     public Response signInUser(@Context HttpHeaders header) {
         log.info("Signing in user");
 
-        String authHeader = header.getHeaderString("Authorization");
-        String jwt;
-        try {
-            jwt = new String(Base64.decode(authHeader.split("Bearer")[1]),"UTF-8");
-        } catch(UnsupportedEncodingException e) {
-            log.error(e.getMessage());
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
-        }
+        HashMap<String,Object> claimsMap = (HashMap<String,Object>) SecurityVerificationUtils.userCredentials(header);
 
-        Claims claims;
-        try {
-            claims = (new JWTBuilder()).getClaims(jwt);
-        } catch(ExpiredJwtException | UnsupportedJwtException | MalformedJwtException
-                | IllegalArgumentException | IOException e) {
-            log.error(e.getMessage());
-            return Response.status(Response.Status.FORBIDDEN).build();
-        }
+        Response respErrorCode = checkErrorCodes((int)claimsMap.get("errorCode"),(String)claimsMap.get("error"));
+        if(respErrorCode != null)
+            return respErrorCode;
 
-        if(claims.isEmpty())
-            return Response.status(Response.Status.EXPECTATION_FAILED)
-                    .entity(JsonErrorStatus.errorInvalidAuthTkn)
-                    .build();
 
-        String userId = claims.getSubject().split("user/")[1];
+        String userId = ((String)claimsMap.get("subject")).split("user/")[1];
         UnwheezeDbUsers db = new UnwheezeDbUsers();
 
         boolean userExists = db.isUserInCollection(userId,DbScheme.USERS_ID);
@@ -180,43 +166,49 @@ public class UserResources {
     @Path("/remove")
     public Response deleteUser(@Context HttpHeaders headers) {
         //TODO : Rewrite this shit
-        String authHeader = headers.getHeaderString("Authorization");
-        String jwt;
-        try {
-            jwt = new String(Base64.decode(authHeader.split("Bearer")[1]),"UTF-8");
-        } catch(UnsupportedEncodingException e) {
-            log.error(e.getMessage());
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
-        }
 
-        Claims claims;
-        try {
-            claims = (new JWTBuilder()).getClaims(jwt);
-        } catch(ExpiredJwtException | UnsupportedJwtException | MalformedJwtException
-                | IllegalArgumentException | IOException e) {
-            log.error(e.getMessage());
-            return Response.status(Response.Status.FORBIDDEN).build();
-        }
+        HashMap<String,Object> claimsMap = (HashMap<String,Object>) SecurityVerificationUtils.userCredentials(headers);
 
-        if(claims.isEmpty())
-            return Response.status(Response.Status.EXPECTATION_FAILED)
-                    .entity(JsonErrorStatus.errorInvalidAuthTkn)
-                    .build();
+        Response respErrorCode = checkErrorCodes((int)claimsMap.get("errorCode"),(String)claimsMap.get("error"));
+        if(respErrorCode != null)
+            return respErrorCode;
 
-        int userScope = (int) claims.get("scope");
-        String userId = claims.getSubject().split("user/")[1];
+        String userScope = (String)claimsMap.get("scope");
+        String userId = ((String)claimsMap.get("subject")).split("user/")[1];
         //TODO: verifier user a les droits nescessaire
         UnwheezeDbUsers db = new UnwheezeDbUsers();
-        MapObject reponse = db.removeUser(userId);
+       HashMap<String,Object> reponse = db.removeUser(userId);
 
-        int errors = (int) reponse.get("errors");
+        int errors = (int)((long) reponse.get("errors"));
         if(errors != 0)
             return Response.status(Response.Status.EXPECTATION_FAILED)
                     .build();
 
         return Response.status(Response.Status.OK)
+                .entity(reponse.toString())
                 .build();
 
+    }
+
+
+    public Response checkErrorCodes(int code,String error) {
+        switch(code) {
+            case -1:
+                return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                        .entity(error)
+                        .build();
+            case -2:
+                return Response.status(Response.Status.FORBIDDEN)
+                        .entity(error)
+                        .build();
+            case -3:
+                return Response.status(Response.Status.EXPECTATION_FAILED)
+                        .entity(JsonErrorStatus.errorInvalidAuthTkn)
+                        .build();
+            default:
+                break;
+        }
+        return null;
     }
 
 

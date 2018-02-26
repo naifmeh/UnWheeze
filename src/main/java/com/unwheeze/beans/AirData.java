@@ -1,10 +1,14 @@
 package com.unwheeze.beans;
 
+import com.rethinkdb.RethinkDB;
+import com.rethinkdb.gen.ast.Point;
+
 import java.lang.reflect.Field;
 
 public class AirData {
 
     private String location;
+    private Point geolocation;
     private float pm25;
     private float pm10;
     private float no2;
@@ -23,8 +27,17 @@ public class AirData {
     }
 
     public AirData(String location, float pm25, float pm10, float no2, String datetime, String userID) {
-
         this.location = location;
+        this.pm25 = pm25;
+        this.pm10 = pm10;
+        this.no2 = no2;
+        this.datetime = datetime;
+        this.userID = userID;
+    }
+
+    public AirData(String location, Point geolocation, float pm25, float pm10, float no2, String datetime, String userID) {
+        this.location = location;
+        this.geolocation = geolocation;
         this.pm25 = pm25;
         this.pm10 = pm10;
         this.no2 = no2;
@@ -80,7 +93,11 @@ public class AirData {
         this.userID = userID;
     }
 
+    public Point getGeolocation() {
+        return geolocation;
+    }
 
-
-
+    public void setGeolocation(Point geolocation) {
+        this.geolocation = geolocation;
+    }
 }

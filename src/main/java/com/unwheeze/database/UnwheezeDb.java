@@ -27,47 +27,49 @@ public class UnwheezeDb {
     protected static final String HOST = "localhost";
     protected static final int PORT = 28015;
 
-    protected  RethinkDB r;
-    protected  Connection connection;
+    protected RethinkDB r;
+    protected Connection connection;
 
-    protected  boolean isDbInit = false;
+    protected boolean isDbInit = false;
 
     protected Gson gson = new Gson();
 
     protected static final String AIRTABLE = DbScheme._AIRDATA;
     protected static final String USERTABLE = DbScheme._USERS;
     protected static final String AUTHTABLE = DbScheme._WSAUTH;
+
     public UnwheezeDb() {
-        if(!isDbInit) {
+        if (!isDbInit) {
             r = RethinkDB.r;
             connection = r.connection().hostname(HOST).port(PORT).connect();
 
-            if(connection.isOpen())
-                    isDbInit = true;
+            if (connection.isOpen())
+                isDbInit = true;
 
             assertDatabaseExists();
             connection.use(DbScheme.DB);
 
             try {
                 assertDbStructExists();
-            } catch(IllegalAccessException e) {
+            } catch (IllegalAccessException e) {
                 e.printStackTrace();
             }
         }
 
     }
+
     public int assertDatabaseExists() {
         boolean containDb = r.dbList().contains(DbScheme.DB).run(connection);
-        if(!containDb)
+        if (!containDb)
             r.dbCreate(DbScheme.DB).run(connection);
         return 0;
     }
 
     public int assertDbStructExists() throws IllegalAccessException {
 
-        HashMap<String,Object> fields = ReflectionUtils.getObject(new DbScheme());
+        HashMap<String, Object> fields = ReflectionUtils.getObject(new DbScheme());
         Iterator it = fields.entrySet().iterator();
-        while(it.hasNext()) {
+        while (it.hasNext()) {
             Map.Entry<String, String> pair = (Map.Entry<String, String>) it.next();
 
             String key = (String) pair.getKey();
@@ -83,10 +85,6 @@ public class UnwheezeDb {
     public String generateUUID() {
         return r.uuid().run(connection);
     }
-
-
-
-
 
 
 }

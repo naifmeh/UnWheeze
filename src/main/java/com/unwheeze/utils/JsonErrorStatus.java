@@ -9,4 +9,5 @@ public class JsonErrorStatus {
 	public static final String errorInvalidFormatEmail = "{ 'errorStatus':' Invalid email format' }";
 	public static final String errorIncorrectCred = "{ 'errorStatus':' Incorrect credentials' }";
 	public static final String errorInvalidAuthTkn = "{ 'errorStatus':' Incorrect authorization token'}";
+	public static final String errorInvalidApiKey = "{ 'errorStatus':' Incorrect API Key'}";
 }
