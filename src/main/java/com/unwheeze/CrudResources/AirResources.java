@@ -1,7 +1,10 @@
 package com.unwheeze.CrudResources;
 
+import com.google.gson.Gson;
 import com.rethinkdb.gen.ast.Http;
+import com.unwheeze.beans.AirData;
 import com.unwheeze.database.DbScheme;
+import com.unwheeze.database.UnwheezeDbAirData;
 import com.unwheeze.database.UnwheezeDbAuth;
 import com.unwheeze.exception.NoApiKeyFoundException;
 import com.unwheeze.utils.JsonErrorStatus;
@@ -15,11 +18,13 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-
+@Path("airData/")
 public class AirResources {
     private static final Logger log = LogManager.getLogger(AirResources.class.getName());
     private String AIRTABLE = DbScheme._AIRDATA;
 
+    private Gson gson = new Gson();
+    private UnwheezeDbAirData db;
     //TODO:Complete this class
 
 
@@ -35,28 +40,66 @@ public class AirResources {
                     .entity(JsonErrorStatus.errorInvalidApiKey)
                     .build();
 
+        AirData airData = gson.fromJson(json,AirData.class);
+        db = new UnwheezeDbAirData();
+        int reponse = db.putDataInCollection(airData);
+        if(reponse < 0)
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                .build();
 
+        return Response.status(Response.Status.OK).build();
 
-
-        return null;
     }
 
     @GET
-    @Consumes(MediaType.APPLICATION_JSON)
+    //@Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("/getAirCollection/{area}")
-    public Response getCollectionData(String json) {
-        //TODO : Check security key first
-        return null;
+    @Path("/getAirCollection")
+    public Response getCollectionData(String json,@Context HttpHeaders headers) {
+        boolean isApiKeyValid = SecurityVerificationUtils.isApiKeyValid(headers);
+        if(!isApiKeyValid)
+            return Response.status(Response.Status.FORBIDDEN)
+                    .entity(JsonErrorStatus.errorInvalidApiKey)
+                    .build();
+        db = new UnwheezeDbAirData();
+        String reponse;
+        try {
+            reponse = db.getAllDataFromCollection();
+        } catch (IllegalAccessException e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .build();
+        }
+
+
+
+        return Response.status(Response.Status.OK).entity(reponse).build();
+
+
     }
 
     @GET
-    @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("/getAirData")
-    public Response getAirData(String json) {
-        //TODO : Check security key first
-        return null;
+    @Path("/getAirData/{id}")
+    public Response getAirData(@Context HttpHeaders headers,@PathParam("id") String id) {
+        boolean isApiKeyValid = SecurityVerificationUtils.isApiKeyValid(headers);
+        if(!isApiKeyValid)
+            return Response.status(Response.Status.FORBIDDEN)
+                    .entity(JsonErrorStatus.errorInvalidApiKey)
+                    .build();
+
+
+        db = new UnwheezeDbAirData();
+        String reponse;
+        try {
+            reponse = db.getDataFromCollection(id);
+        } catch (IllegalAccessException e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .build();
+        }
+
+
+
+        return Response.status(Response.Status.OK).entity(reponse).build();
     }
 
 
