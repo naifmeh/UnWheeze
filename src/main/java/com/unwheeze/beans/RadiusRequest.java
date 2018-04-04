@@ -1,18 +1,18 @@
 package com.unwheeze.beans;
 
-public class RequestWeb {
+public class RadiusRequest {
 
     private AirData airData;
     private int duration;
     private int distance;
 
-    public RequestWeb(AirData airData, int duration, int distance) {
+    public RadiusRequest(AirData airData, int duration, int distance) {
         this.airData = airData;
         this.duration = duration;
         this.distance = distance;
     }
 
-    public RequestWeb() {
+    public RadiusRequest() {
     }
 
     public AirData getAirData() { return airData; }

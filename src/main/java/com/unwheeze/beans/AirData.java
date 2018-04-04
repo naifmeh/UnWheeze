@@ -1,47 +1,45 @@
 package com.unwheeze.beans;
 
-import com.rethinkdb.RethinkDB;
-import com.rethinkdb.gen.ast.Point;
 
-import java.lang.reflect.Field;
+import java.time.OffsetDateTime;
 
 public class AirData {
 
     private String location;
-    private Point geolocation;
+    private GeoBean geolocation;
     private float pm25;
     private float pm10;
-    private float no2;
-    private String datetime;
+    private float pm1;
+    private String datetime = OffsetDateTime.now().toString();
     private String userID;
 
     public AirData() {
     }
 
-    public AirData(String location, float pm25, float pm10, String datetime, String userID) {
+    public AirData(String location, float pm25, float pm10, String userID) {
         this.location = location;
         this.pm25 = pm25;
         this.pm10 = pm10;
-        this.datetime = datetime;
+        this.datetime = OffsetDateTime.now().toString();
         this.userID = userID;
     }
 
-    public AirData(String location, float pm25, float pm10, float no2, String datetime, String userID) {
+    public AirData(String location, float pm25, float pm10, float pm1, String userID) {
         this.location = location;
         this.pm25 = pm25;
         this.pm10 = pm10;
-        this.no2 = no2;
-        this.datetime = datetime;
+        this.pm1 = pm1;
+        this.datetime = OffsetDateTime.now().toString();
         this.userID = userID;
     }
 
-    public AirData(String location, Point geolocation, float pm25, float pm10, float no2, String datetime, String userID) {
+    public AirData(String location, GeoBean geolocation, float pm25, float pm10, float pm1, String userID) {
         this.location = location;
         this.geolocation = geolocation;
         this.pm25 = pm25;
         this.pm10 = pm10;
-        this.no2 = no2;
-        this.datetime = datetime;
+        this.pm1 = pm1;
+        this.datetime = OffsetDateTime.now().toString();
         this.userID = userID;
     }
 
@@ -69,12 +67,12 @@ public class AirData {
         this.pm10 = pm10;
     }
 
-    public float getNo2() {
-        return no2;
+    public float getPm1() {
+        return pm1;
     }
 
-    public void setNo2(float no2) {
-        this.no2 = no2;
+    public void setPm1(float pm1) {
+        this.pm1 = pm1;
     }
 
     public String getDatetime() {
@@ -93,11 +91,11 @@ public class AirData {
         this.userID = userID;
     }
 
-    public Point getGeolocation() {
+    public GeoBean getGeolocation() {
         return geolocation;
     }
 
-    public void setGeolocation(Point geolocation) {
+    public void setGeolocation(GeoBean geolocation) {
         this.geolocation = geolocation;
     }
 }

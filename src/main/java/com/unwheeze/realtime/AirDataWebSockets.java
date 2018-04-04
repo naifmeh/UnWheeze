@@ -5,16 +5,18 @@ import com.rethinkdb.RethinkDB;
 import com.rethinkdb.gen.ast.Point;
 import com.rethinkdb.net.Cursor;
 import com.unwheeze.beans.AirData;
+import com.unwheeze.beans.GeoBean;
 import com.unwheeze.database.UnwheezeDb;
 import com.unwheeze.database.UnwheezeDbAirData;
 
 import javax.websocket.*;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashMap;
 
 @ServerEndpoint(
-        value = "/realtime/dataflow",
+        value = "/realtime/airDataFlow",
         encoders = {AirDataMessageEncoder.class},
         decoders = {AirDataMessageDecoder.class})
         //configurator = com.unwheeze.realtime.ServerEndpoint.class)
@@ -52,7 +54,14 @@ public class AirDataWebSockets {
         if (message != null) {
             Point geoloc = RethinkDB.r.point(Float.parseFloat(message.getLocation().split(",")[0])
                     , Float.parseFloat(message.getLocation().split(",")[1]));
-            message.setGeolocation(geoloc);
+
+            String[] location = message.getLocation().split(",");
+            double [] geolocation = Arrays.stream(location)
+                                .mapToDouble(Double::parseDouble)
+                                .toArray();
+
+            message.setGeolocation(new GeoBean(geolocation));
+
             ((UnwheezeDbAirData) db).putDataInCollection(message);
         }
 
@@ -60,7 +69,7 @@ public class AirDataWebSockets {
 
     @OnClose
     public void onClose(Session session) throws IOException {
-        System.out.println("closed");
+        cursor.close();
         this.thread = null;
     }
 

@@ -3,6 +3,7 @@ package com.unwheeze.database;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.reflect.TypeToken;
+import com.rethinkdb.gen.ast.Point;
 import com.rethinkdb.model.MapObject;
 import com.rethinkdb.net.Cursor;
 import com.unwheeze.beans.AirData;
@@ -61,5 +62,17 @@ public class UnwheezeDbAirData extends UnwheezeDb {
     public Cursor provideChangefeed() {
         return r.table(AIRTABLE).changes()
                 .run(connection);
+    }
+
+    public String getNearestPoint(Point point,int radius,int maxRes) {
+       ArrayList<? extends Object> result =  r.table(AIRTABLE).getNearest(point)
+                .optArg("index",DbScheme.AIRDATA_GEOLOCATION)
+                .optArg("max_results",maxRes)
+                .run(connection);
+
+
+
+        //String jsonLocation = super.gson.toJson(result, new TypeToken<ArrayList<? extends Object>>(){}.getType());
+        return gson.toJson(result);
     }
 }

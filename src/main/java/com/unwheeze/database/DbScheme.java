@@ -10,11 +10,11 @@ public class DbScheme {
     public final static String AIRDATA_ID = "id";
     public final static String AIRDATA_PM2 = "pm25";
     public final static String AIRDATA_PM10 = "pm10";
-    public final static String AIRDATA_NO2 = "no2";
-    public final static String AIRDATA_LONGITUDE = "longitude";
-    public final static String AIRDATA_LATITUDE = "latitude";
-    public final static String AIRDATA_UPLOADER = "source";
-    public final static String AIRDATA_DATETIME = "source";
+    public final static String AIRDATA_PM1 = "pm1";
+    public final static String AIRDATA_LOCATION = "location";
+    public final static String AIRDATA_USERID = "userID";
+    public final static String AIRDATA_DATETIME = "datetime";
+    public final static String AIRDATA_GEOLOCATION = "geolocation";
 
     public final static String _USERS = "users";
     public final static String USERS_ID ="id";

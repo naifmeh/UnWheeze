@@ -19,9 +19,8 @@ public class UnwheezeDbTest extends TestCase {
         float pm10 = 20.5f;
         float pm25 = 14.5f;
         String no2 = "10";
-        String dateTime = Long.toString((new Date()).getTime());
 
-        AirData airData = new AirData(location,pm10,pm25,dateTime,userId);
+        AirData airData = new AirData(location,pm10,pm25,userId);
         UnwheezeDb db = new UnwheezeDbAirData();
         int res =((UnwheezeDbAirData) db).putDataInCollection(airData);
         System.out.println(res);
