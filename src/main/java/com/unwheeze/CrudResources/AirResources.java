@@ -29,7 +29,13 @@ public class AirResources {
     //TODO:Complete this class
 
 
-
+    /**
+     * /putAirData endpoint allow to insert an air data json object in the database
+     * Must have the following fields : pm25,pm10,pm1 float format ; location string with latitude,longitude and userId (optionnal)
+     * @param json
+     * @param headers
+     * @return
+     */
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
@@ -59,7 +65,7 @@ public class AirResources {
     }
 
     /**
-     * Renvoi un JSONARRAY contenant toute la database
+     * Return JsonArray containing the airData table content
      * @param json
      * @param headers
      * @return Stringified JSONARRAY containing database content
@@ -89,6 +95,12 @@ public class AirResources {
 
     }
 
+    /**
+     * /getAirData/{id} get specific Id airData
+     * @param headers
+     * @param id
+     * @return
+     */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/getAirData/{id}")
@@ -114,6 +126,14 @@ public class AirResources {
         return Response.status(Response.Status.OK).entity(reponse).build();
     }
 
+    /**
+     * /getNearest/{location} returns the nearest point to the specified location.
+     * Location must be of format Lat,Long
+     * Search radius is of 20 meters by default.
+     * See /getNearest/{location}/{radius} for a custom radius.
+     * @param location
+     * @return JsonObject containing the nearest point and it's attributes
+     */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @SuppressWarnings("")
@@ -137,6 +157,14 @@ public class AirResources {
         return Response.status(Response.Status.OK).entity(db.getNearestPoint(point,20,20)).build();
     }
 
+    /**
+     *
+     * Same as getNearest except the radius is specified ../{radius}
+     * @param headers
+     * @param location
+     * @param radius
+     * @return
+     */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/getNearest/{location}/{radius}")

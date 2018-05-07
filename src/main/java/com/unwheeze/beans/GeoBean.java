@@ -11,7 +11,7 @@ public class GeoBean {
     public GeoBean(double[] coordinates) {
         this.$reql_type$ = "GEOMETRY";
         this.coordinates = coordinates;
-        this.type = "POINT";
+        this.type = "Point";
     }
 
     public String get$reql_type$() {

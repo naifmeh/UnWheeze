@@ -31,6 +31,11 @@ public class AirDataWebSockets {
     public AirDataWebSockets() {
     }
 
+    /**
+     * Open the WS connection and initialize the airdata table changefeed in a background thread for every new user.
+     * @param session
+     * @throws IOException
+     */
     @OnOpen
     public void onOpen(Session session) throws IOException {
 
@@ -48,6 +53,13 @@ public class AirDataWebSockets {
         System.out.println("opened");
     }
 
+    /**
+     * OnMessage of WS accept messages as a JSON format defining an AirData.
+     * The message format is defined in the ServerEndpointConfiguration.
+     * @param session
+     * @param message
+     * @throws IOException
+     */
     @OnMessage
     public void onMessage(Session session, AirData message) throws IOException {
 

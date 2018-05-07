@@ -37,6 +37,12 @@ public class UnwheezeResources {
 
     private String ISSUER = "UnWheeze";
 
+    /**
+     * Return a token used to access the airData API, no need to be authentified.
+     * This token serve uniquely as an Authorization to be passed in the X-Api-Key header of the API.
+     * @param headers
+     * @return
+     */
     @GET
     @Path("/clientToken")
     @Produces(MediaType.APPLICATION_JSON)
@@ -59,6 +65,12 @@ public class UnwheezeResources {
                 .build();
     }
 
+    /**
+     * Get specific JWT token to the user. User must be specified in the Authorization Basic header as a Base64 encoded user:pwd
+     * Token is valid for a limited amount of time.
+     * @param headers
+     * @return
+     */
     @GET
     @Path("/token")
     @Produces(MediaType.APPLICATION_JSON)

@@ -42,6 +42,13 @@ public class UserResources {
     Gson gson = new Gson();
     private final String REGEX_EMAIL="^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
 
+    /**
+     * Allow an user to signup to the user table.
+     * Usage not recommmended before setting up the https server.
+     * @param json
+     * @param headers
+     * @return
+     */
     @POST
     @Path("/signup")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -121,7 +128,11 @@ public class UserResources {
 
     }
 
-
+    /**
+     * Signing in user. Authentication Bearer necessary with the Base64 encoded JWT as the field's value.
+     * @param header
+     * @return Returns ALL the user's informations as JSON.
+     */
     @POST
     @Path("/signin")
     @Produces(MediaType.APPLICATION_JSON)

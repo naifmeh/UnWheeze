@@ -5,6 +5,7 @@ import java.time.OffsetDateTime;
 
 public class AirData {
 
+    private String id;
     private String location;
     private GeoBean geolocation;
     private float pm25;
@@ -21,6 +22,17 @@ public class AirData {
         this.pm25 = pm25;
         this.pm10 = pm10;
         this.datetime = OffsetDateTime.now().toString();
+        this.userID = userID;
+    }
+
+    public AirData(String id, String location, GeoBean geolocation, float pm25, float pm10, float pm1, String datetime, String userID) {
+        this.id = id;
+        this.location = location;
+        this.geolocation = geolocation;
+        this.pm25 = pm25;
+        this.pm10 = pm10;
+        this.pm1 = pm1;
+        this.datetime = datetime;
         this.userID = userID;
     }
 
@@ -97,5 +109,13 @@ public class AirData {
 
     public void setGeolocation(GeoBean geolocation) {
         this.geolocation = geolocation;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 }

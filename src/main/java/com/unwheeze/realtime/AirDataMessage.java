@@ -11,7 +11,6 @@ public class AirDataMessage {
     }
 
     public AirDataMessage(AirData new_val, AirData old_val) {
-
         this.new_val = new_val;
         this.old_val = old_val;
     }
