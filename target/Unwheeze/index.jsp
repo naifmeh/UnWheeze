@@ -24,30 +24,53 @@
   .tg .tg-e3zv{font-weight:bold}
 </style>
 
-<center><h2>UNWHEEZE APK LINKS</h2><br/><table class="tg">
+<center><h2>UNWHEEZE APK LINKS</h2>
+  <p>To access the app documentation, click <a href="AppDoc/index.html">here</a></p><br/>
+  <table class="tg">
   <tr>
     <th class="tg-e3zv">Version</th>
     <th class="tg-e3zv">Link</th>
     <th class="tg-e3zv">Comments</th>
   </tr>
+    <tr>
+      <td class="tg-031e">Bêta 0.1.1</td>
+      <td class="tg-031e"><a href="http://www.droidbin.com/p1cdcmhncisf517jaisi9qf1dbm3" target="_blank">UnwheezeBeta0.1.1.apk</a></td>
+      <td class="tg-031e">Fixing some bugs with the periodic measure. Also changed the labels.</td>
+    </tr>
+    <tr>
+      <td class="tg-031e">Bêta 0.1.0</td>
+      <td class="tg-031e"><a href="http://www.droidbin.com/p1cdbc78pvb4f1sde1vbp59jpc23" target="_blank">UnwheezeBeta0.1.0.apk</a></td>
+      <td class="tg-031e">New feature to measure periodically (fixed 30 s for now, may be able to chose the period in the future). Still in beta testing, expect many bugs. It's still not working when the screen turn off but it's a good start.
+      Also fixed some bugs along the line.</td>
+    </tr>
+    <tr>
+      <td class="tg-031e">Bêta 0.0.5</td>
+      <td class="tg-031e"><a href="http://www.droidbin.com/p1cd8a9kk01h5gc7j8gl1b7tufi3" target="_blank">UnwheezeBeta0.0.5.apk</a></td>
+      <td class="tg-031e">Added extensive error handling.</td>
+    </tr>
   <tr>
-    <td class="tg-031e">0.0.3</td>
+    <td class="tg-031e">Bêta 0.0.4</td>
+    <td class="tg-031e"><a href="http://www.droidbin.com/p1ccvlrkeo1oi91h821apt10rqbln3" target="_blank">UnwheezeBeta0.0.4.apk</a></td>
+    <td class="tg-031e">Fixed the failing to charge at the app opening. Now cleaning database at every app reopening to check for deleted points. Refresh button do the same.</td>
+  </tr>
+  <tr>
+    <td class="tg-031e">Bêta 0.0.3</td>
     <td class="tg-031e"><a href="http://www.droidbin.com/p1cctjb3o01duidc515js1eqo1sgr3" target="_blank">UnwheezeBeta0.0.3.apk</a></td>
     <td class="tg-031e">Changed measure request architecture to handle null location using the android location listener</td>
   </tr>
   <tr>
-    <td class="tg-031e">0.0.2</td>
+    <td class="tg-031e">Bêta 0.0.2</td>
     <td class="tg-031e"><a href="http://www.droidbin.com/p1cctf2mk2146plv0nt71ehot2g3" target="_blank">UnwheezeBeta0.0.2.apk</a></td>
     <td class="tg-031e">Handled crashing when app switch from portrait to landscape</td>
   </tr>
   <tr>
-    <td class="tg-031e">0.0.1</td>
+    <td class="tg-031e">Bêta 0.0.1</td>
     <td class="tg-031e"><a href="http://www.droidbin.com/p1ccoqn899hv4123p1e351h641vdh3" target="_blank">UnwheezeBetav0.0.1.apk</a></td>
     <td class="tg-031e">Added some UI features and corrected small connectivity bugs</td>
   </tr>
   <tr>
-    <td class="tg-031e">0.0.0</td>
-    <td class="tg-031e"><a href="Unwheeze.apk">here</a> </td>
+    <td class="tg-031e">Bêta 0.0.0</td>
+    <td class="tg-031e"><a href="Unwheeze.apk">UnwheezeBeta0.0.0.apk</a> </td>
     <td class="tg-031e">First working version</td>
   </tr>
 
