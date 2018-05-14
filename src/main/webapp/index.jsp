@@ -32,7 +32,11 @@
     <th class="tg-e3zv">Link</th>
     <th class="tg-e3zv">Comments</th>
   </tr>
-
+    <tr>
+      <td class="tg-031e">Bêta 0.1.3</td>
+      <td class="tg-031e"><a href="http://www.droidbin.com/p1cdfujtbn1g8uo5dq16162o1rml3" target="_blank">UnwheezeBeta0.1.3.apk</a></td>
+      <td class="tg-031e">Ajout d'une icone sur le app drawer (ronde et carré)</td>
+    </tr>
     <tr>
       <td class="tg-031e">Bêta 0.1.2</td>
       <td class="tg-031e"><a href="http://www.droidbin.com/p1cdfmmb4le767g1ga91jo3ss03" target="_blank">UnwheezeBeta0.1.2.apk</a></td>

@@ -32,6 +32,12 @@
     <th class="tg-e3zv">Link</th>
     <th class="tg-e3zv">Comments</th>
   </tr>
+
+    <tr>
+      <td class="tg-031e">Bêta 0.1.2</td>
+      <td class="tg-031e"><a href="http://www.droidbin.com/p1cdfmmb4le767g1ga91jo3ss03" target="_blank">UnwheezeBeta0.1.2.apk</a></td>
+      <td class="tg-031e">Ajout d'un delai de chargement en cas de gros travail pour récupérer les données. Un problème avec la 4G que nous tentons de resoudre est présent des toutes les versions.</td>
+    </tr>
     <tr>
       <td class="tg-031e">Bêta 0.1.1</td>
       <td class="tg-031e"><a href="http://www.droidbin.com/p1cdcmhncisf517jaisi9qf1dbm3" target="_blank">UnwheezeBeta0.1.1.apk</a></td>
