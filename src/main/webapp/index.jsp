@@ -34,8 +34,8 @@
   </tr>
     <tr>
       <td class="tg-031e">Bêta 0.1.3</td>
-      <td class="tg-031e"><a href="http://www.droidbin.com/p1cdfujtbn1g8uo5dq16162o1rml3" target="_blank">UnwheezeBeta0.1.3.apk</a></td>
-      <td class="tg-031e">Ajout d'une icone sur le app drawer (ronde et carré)</td>
+      <td class="tg-031e"><a href="http://www.droidbin.com/p1cdhqjjb7j455kgqemni7bs63" target="_blank">UnwheezeBeta0.1.3.apk</a></td>
+      <td class="tg-031e">Ajout d'une icone sur le app drawer (ronde et carré). Réglage de quelques problèmes de design.</td>
     </tr>
     <tr>
       <td class="tg-031e">Bêta 0.1.2</td>
